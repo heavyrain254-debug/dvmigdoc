@@ -71,7 +71,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
     try {
       const doc = new jsPDF();
       doc.setFontSize(20);
-      doc.setTextColor(126, 172, 247); // Brand Blue
+      doc.setTextColor(126, 172, 247);
       doc.text("Worldox to Docsvault Migration Form", 14, 20);
       
       doc.setFontSize(12);
@@ -111,7 +111,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
       doc.text(`2.8 Document Stamping: ${formData.stampingRequired} ${formData.stampingRequirement ? `- ${formData.stampingRequirement}` : ''}`, 14, yPos); yPos += 10;
       doc.text(`2.9 PDF Editing: ${formData.pdfEditor}`, 14, yPos); yPos += 15;
 
-      doc.setTextColor(236, 45, 56); // Brand Red
+      doc.setTextColor(236, 45, 56);
       doc.text(`Signed By: ${formData.signature}`, 14, yPos);
       doc.setTextColor(100,100,100);
       doc.setFontSize(10);
@@ -135,7 +135,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-[#7EACF7] font-medium">Loading...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-brand-blue font-medium">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-gray-900 pb-32">
@@ -146,7 +146,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             <h1 className="text-lg font-bold tracking-tight">Worldox to Docsvault Migration</h1>
           </div>
           {isSubmitted ? (
-             <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-[#7EACF7]">Submitted</span>
+             <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-brand-blue/20 text-brand-blue">Submitted</span>
           ) : (
             <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${saving ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>
               {saving ? 'Saving...' : 'All changes saved'}
@@ -158,9 +158,9 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
       <div className="max-w-4xl mx-auto px-4 pt-24 space-y-8">
         <form className={`space-y-8 ${isSubmitted ? 'opacity-60 pointer-events-none' : ''}`} onSubmit={handleSubmit}>
           
-          {/* SECTION 1 */}
+          {/* 1 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="bg-[#7EACF7] px-6 py-4"><h2 className="text-lg font-semibold text-white">1. Information for the IT Team</h2></div>
+            <div className="bg-brand-blue px-6 py-4"><h2 className="text-lg font-semibold text-white">1. Information for the IT Team</h2></div>
             <div className="p-6 space-y-6">
               <div>
                 <h3 className="font-semibold text-gray-800">1.1 Access to the Docsvault machine and Worldox</h3>
@@ -182,8 +182,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </div>
           </div>
 
-          {/* SECTION 2 HEADER */}
-          <div className="bg-[#EC2D38] px-6 py-4 rounded-2xl shadow-sm mt-12 mb-4"><h2 className="text-lg font-semibold text-white">2. Information from the Worldox Migration Decision-Maker</h2></div>
+          <div className="bg-brand-red px-6 py-4 rounded-2xl shadow-sm mt-12 mb-4"><h2 className="text-lg font-semibold text-white">2. Information from the Worldox Migration Decision-Maker</h2></div>
 
           {/* 2.1.1 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
@@ -207,16 +206,16 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                       <td className="px-2 py-2"><select className="w-full border-gray-300 rounded p-2 text-sm bg-white" value={cab.migrate} onChange={e => updateCabinetRow(cab.id, 'migrate', e.target.value)}><option>Yes</option><option>No</option></select></td>
                       <td className="px-2 py-2"><input type="date" className="w-full border-gray-300 rounded p-2 text-sm" value={cab.cutover} onChange={e => updateCabinetRow(cab.id, 'cutover', e.target.value)} /></td>
                       <td className="px-2 py-2"><input className="w-full border-gray-300 rounded p-2 text-sm" value={cab.users} onChange={e => updateCabinetRow(cab.id, 'users', e.target.value)} placeholder="Users" /></td>
-                      <td className="px-2 py-2 text-center"><button type="button" onClick={() => removeCabinetRow(cab.id)} className="text-[#EC2D38] font-bold">✕</button></td>
+                      <td className="px-2 py-2 text-center"><button type="button" onClick={() => removeCabinetRow(cab.id)} className="text-brand-red font-bold">✕</button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <button type="button" onClick={addCabinetRow} className="mt-4 text-sm font-medium text-[#7EACF7]">+ Add Cabinet Row</button>
+            <button type="button" onClick={addCabinetRow} className="mt-4 text-sm font-medium text-brand-blue">+ Add Cabinet Row</button>
           </div>
 
-                {/* 2.1.2 */}
+          {/* 2.1.2 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-lg font-bold text-gray-900 mb-2">2.1.2 Understanding Index and metadata mapping (Informational Only)</h3>
             <p className="text-sm text-gray-600 mb-4">Worldox stores an index value as two fields: Code(ID) and Description. Docsvault uses one field, so please choose how each index should appear after migration.</p>
@@ -231,15 +230,15 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </table>
             <p className="text-sm text-gray-600 mb-6">For example, if Client Code = 001 and Client Description = Acme Corp, choose the format you prefer. Apply the same decision to indexes such as Client, Matter, DocType, Author, Creator, and any other indexes used in each cabinet.</p>
             
-            {/* Images for 2.1.2 */}
+            {/* 2.1.2 IMAGES with Fail-Safe Placeholders */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.1.2-metadata-1.png" alt="Metadata Mapping 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.2-metadata-1.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.1.2-metadata-1.png" alt="Metadata 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.2-metadata-1.png</span>
               </div>
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.1.2-metadata-2.png" alt="Metadata Mapping 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.2-metadata-2.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.1.2-metadata-2.png" alt="Metadata 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.2-metadata-2.png</span>
               </div>
             </div>
           </div>
@@ -248,14 +247,16 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-lg font-bold text-gray-900 mb-2">2.1.3 Understanding Folder Structure (Informational Only)</h3>
             <p className="text-sm text-gray-600 mb-4">Please let us know how you would like the Worldox folder structure mapped in Docsvault. For example: Client - Matter - Documents. To review the current structure in Worldox, select the cabinet on the left and open its active folder view to see the folder levels and documents.</p>
+            
+            {/* 2.1.3 IMAGES with Fail-Safe Placeholders */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.1.3-folder-1.png" alt="Folder Structure 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.3-folder-1.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.1.3-folder-1.png" alt="Folder 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.3-folder-1.png</span>
               </div>
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.1.3-folder-2.png" alt="Folder Structure 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.3-folder-2.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.1.3-folder-2.png" alt="Folder 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.3-folder-2.png</span>
               </div>
             </div>
           </div>
@@ -268,14 +269,14 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                 <div key={cabinet.id} className="border border-gray-300 rounded-xl overflow-hidden">
                   <div className="bg-gray-50 px-4 py-3 border-b flex justify-between items-center">
                     <h4 className="font-bold text-gray-800">2.2.{idx + 1} Cabinet {idx + 1} Name</h4>
-                    <button type="button" onClick={() => removeMappingCabinet(cabinet.id)} className="text-sm text-[#EC2D38]">Remove</button>
+                    <button type="button" onClick={() => removeMappingCabinet(cabinet.id)} className="text-sm text-brand-red">Remove</button>
                   </div>
                   <div className="p-4 space-y-6">
                     <input className="w-full rounded-lg border-gray-300 p-3 border bg-gray-50" placeholder="Enter Cabinet Name" value={cabinet.name} onChange={(e) => updateMappingCabinet(cabinet.id, 'name', e.target.value)} />
                     <div>
                       <div className="flex justify-between items-end mb-2">
                         <label className="text-sm font-semibold text-gray-700">Index Mapping</label>
-                        <button type="button" onClick={() => addIndex(cabinet.id)} className="text-sm text-[#7EACF7]">+ Add Index</button>
+                        <button type="button" onClick={() => addIndex(cabinet.id)} className="text-sm text-brand-blue">+ Add Index</button>
                       </div>
                       <table className="w-full border border-gray-200 text-sm">
                         <thead className="bg-gray-50">
@@ -290,7 +291,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                                   <option>Code-Description</option><option>Code</option><option>Description</option>
                                 </select>
                               </td>
-                              <td className="p-2 border-b text-center"><button type="button" onClick={() => removeIndex(cabinet.id, index.id)} className="text-[#EC2D38] font-bold">✕</button></td>
+                              <td className="p-2 border-b text-center"><button type="button" onClick={() => removeIndex(cabinet.id, index.id)} className="text-brand-red font-bold">✕</button></td>
                             </tr>
                           ))}
                         </tbody>
@@ -310,7 +311,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                 </div>
               ))}
             </div>
-            <button type="button" onClick={addMappingCabinet} className="mt-6 w-full py-2 border-2 border-dashed border-[#7EACF7] text-[#7EACF7] rounded-xl font-medium">+ Add Another Cabinet Mapping</button>
+            <button type="button" onClick={addMappingCabinet} className="mt-6 w-full py-2 border-2 border-dashed border-brand-blue text-brand-blue rounded-xl font-medium">+ Add Another Cabinet Mapping</button>
           </div>
 
           {/* 2.3 */}
@@ -334,13 +335,13 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             <h3 className="text-xl font-bold text-gray-900 mb-2">2.4 Comments</h3>
             <p className="text-sm text-gray-600 mb-4">Where would you like Worldox comments to be stored in Docsvault?</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.4-comments-1.png" alt="Comments 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.4-comments-1.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.4-comments-1.png" alt="Comments 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.4-comments-1.png</span>
               </div>
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.4-comments-2.png" alt="Comments 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.4-comments-2.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.4-comments-2.png" alt="Comments 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.4-comments-2.png</span>
               </div>
             </div>
             <div className="space-y-2">
@@ -362,13 +363,13 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             <h3 className="text-xl font-bold text-gray-900 mb-2">2.5 Worldox DocID</h3>
             <p className="text-sm text-gray-600 mb-4">Does your organization use Worldox Doc IDs to search for documents? If so, where should it be copied to in Docsvault?</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.5-docid-1.png" alt="DocID 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.5-docid-1.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.5-docid-1.png" alt="DocID 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.5-docid-1.png</span>
               </div>
-              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
-                <img src="/images/2.5-docid-2.png" alt="DocID 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
-                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.5-docid-2.png</span>
+              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
+                <img src="/images/2.5-docid-2.png" alt="DocID 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.5-docid-2.png</span>
               </div>
             </div>
             <div className="space-y-2">
@@ -439,12 +440,12 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
           </div>
 
           {/* SIGNATURE */}
-          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8 border-t-4 border-t-[#EC2D38]">
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8 border-t-4 border-t-brand-red">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Sign & Submit</h3>
             <p className="text-sm text-gray-600 mb-4">Please type your full name below to electronically sign and submit this document. Once submitted, a PDF will be downloaded and you will not be able to edit this form.</p>
             <input type="text" className="w-full border p-3 rounded-lg bg-gray-50 font-medium" value={formData.signature} onChange={(e) => updateField('signature', e.target.value)} placeholder="Full Name" />
             <div className="mt-6 flex justify-end">
-              <button type="submit" disabled={!formData.signature || isSubmitted || submitting} className="px-10 py-3 rounded-full text-white bg-[#7EACF7] hover:bg-[#7EACF7]/90 font-medium disabled:bg-gray-400">
+              <button type="submit" disabled={!formData.signature || isSubmitted || submitting} className="px-10 py-3 rounded-full text-white bg-brand-blue hover:bg-brand-blue/90 font-medium disabled:bg-gray-400">
                 {submitting ? 'Generating PDF...' : isSubmitted ? 'Submitted' : 'Sign & Submit Form'}
               </button>
             </div>
