@@ -216,10 +216,11 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             <button type="button" onClick={addCabinetRow} className="mt-4 text-sm font-medium text-[#7EACF7]">+ Add Cabinet Row</button>
           </div>
 
-          {/* 2.1.2 */}
+                {/* 2.1.2 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-lg font-bold text-gray-900 mb-2">2.1.2 Understanding Index and metadata mapping (Informational Only)</h3>
             <p className="text-sm text-gray-600 mb-4">Worldox stores an index value as two fields: Code(ID) and Description. Docsvault uses one field, so please choose how each index should appear after migration.</p>
+            
             <table className="max-w-md w-full border border-gray-300 text-sm text-left mb-4">
               <thead className="bg-gray-100"><tr><th className="p-2 border-b">Mapping option</th><th className="p-2 border-b">Example Client Value</th></tr></thead>
               <tbody>
@@ -228,7 +229,19 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                 <tr className="bg-white"><td className="p-2 border-b">Description only</td><td className="p-2 border-b">Acme Corp</td></tr>
               </tbody>
             </table>
-            <p className="text-sm text-gray-600">For example, if Client Code = 001 and Client Description = Acme Corp, choose the format you prefer. Apply the same decision to indexes such as Client, Matter, DocType, Author, Creator, and any other indexes used in each cabinet.</p>
+            <p className="text-sm text-gray-600 mb-6">For example, if Client Code = 001 and Client Description = Acme Corp, choose the format you prefer. Apply the same decision to indexes such as Client, Matter, DocType, Author, Creator, and any other indexes used in each cabinet.</p>
+            
+            {/* Images for 2.1.2 */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.1.2-metadata-1.png" alt="Metadata Mapping 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.2-metadata-1.png</span>
+              </div>
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.1.2-metadata-2.png" alt="Metadata Mapping 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.2-metadata-2.png</span>
+              </div>
+            </div>
           </div>
 
           {/* 2.1.3 */}
