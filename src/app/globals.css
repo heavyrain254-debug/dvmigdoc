@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@theme {
+:root {
   --color-brand-blue: #7EACF7;
   --color-brand-red: #EC2D38;
 }
@@ -9,3 +9,22 @@ body {
   background-color: #f8fafc;
   color: #0f172a;
 }
+
+/* Map the custom brand colors to Tailwind utility classes */
+.bg-brand-blue { background-color: var(--color-brand-blue); }
+.bg-brand-blue\/20 { background-color: rgba(126, 172, 247, 0.2); }
+.bg-brand-blue\/10 { background-color: rgba(126, 172, 247, 0.1); }
+.bg-brand-blue\/5 { background-color: rgba(126, 172, 247, 0.05); }
+.text-brand-blue { color: var(--color-brand-blue); }
+.border-brand-blue { border-color: var(--color-brand-blue); }
+.border-brand-blue\/50 { border-color: rgba(126, 172, 247, 0.5); }
+.focus\:border-brand-blue:focus { border-color: var(--color-brand-blue); }
+.focus\:ring-brand-blue:focus { --tw-ring-color: var(--color-brand-blue); }
+.hover\:bg-brand-blue\/90:hover { background-color: rgba(126, 172, 247, 0.9); }
+.hover\:text-brand-blue\/80:hover { color: rgba(126, 172, 247, 0.8); }
+.hover\:bg-brand-blue\/5:hover { background-color: rgba(126, 172, 247, 0.05); }
+
+.bg-brand-red { background-color: var(--color-brand-red); }
+.border-t-brand-red { border-top-color: var(--color-brand-red); }
+.text-brand-red { color: var(--color-brand-red); }
+.hover\:text-brand-red\/80:hover { color: rgba(236, 45, 56, 0.8); }
