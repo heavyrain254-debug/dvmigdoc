@@ -14,6 +14,9 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
   const [saving, setSaving] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  
+  // State for the zoomed image
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     accessRestrictions: '', sqlServerNotes: '', migrationSize: '',
@@ -135,6 +138,33 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
     }
   };
 
+  // Helper component for the images
+  const ImageCard = ({ src, label }: { src: string, label: string }) => (
+    <div className="flex flex-col items-center">
+      <div 
+        className="relative w-full h-48 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer overflow-hidden group hover:border-brand-blue transition-colors"
+        onClick={() => setZoomedImage(src)}
+      >
+        <img 
+          src={src} 
+          alt={label} 
+          className="w-full h-full object-cover z-10 transition-transform duration-300 group-hover:scale-105" 
+          onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+        />
+        <span className="absolute z-0 text-gray-500 text-sm text-center px-4">Missing Image:<br/>{src.split('/').pop()}</span>
+        
+        {/* Hover Overlay */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors z-20 flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <span className="bg-white/90 text-gray-800 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm flex items-center gap-1">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg>
+            Click to Zoom
+          </span>
+        </div>
+      </div>
+      <span className="mt-3 text-sm font-bold text-gray-700">{label}</span>
+    </div>
+  );
+
   if (loading) return <div className="min-h-screen flex items-center justify-center text-brand-blue font-medium">Loading...</div>;
 
   return (
@@ -220,7 +250,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             <h3 className="text-lg font-bold text-gray-900 mb-2">2.1.2 Understanding Index and metadata mapping (Informational Only)</h3>
             <p className="text-sm text-gray-600 mb-4">Worldox stores an index value as two fields: Code(ID) and Description. Docsvault uses one field, so please choose how each index should appear after migration.</p>
             
-            <table className="max-w-md w-full border border-gray-300 text-sm text-left mb-4">
+            <table className="max-w-md w-full border border-gray-300 text-sm text-left mb-6">
               <thead className="bg-gray-100"><tr><th className="p-2 border-b">Mapping option</th><th className="p-2 border-b">Example Client Value</th></tr></thead>
               <tbody>
                 <tr className="bg-white"><td className="p-2 border-b">Code - Description</td><td className="p-2 border-b">001 - Acme Corp</td></tr>
@@ -230,34 +260,20 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </table>
             <p className="text-sm text-gray-600 mb-6">For example, if Client Code = 001 and Client Description = Acme Corp, choose the format you prefer. Apply the same decision to indexes such as Client, Matter, DocType, Author, Creator, and any other indexes used in each cabinet.</p>
             
-            {/* 2.1.2 IMAGES with Fail-Safe Placeholders */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.1.2-metadata-1.png" alt="Metadata 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.2-metadata-1.png</span>
-              </div>
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.1.2-metadata-2.png" alt="Metadata 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.2-metadata-2.png</span>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ImageCard src="/images/2.1.2-metadata-1.png" label="Worldox" />
+              <ImageCard src="/images/2.1.2-metadata-2.png" label="Docsvault" />
             </div>
           </div>
 
           {/* 2.1.3 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-lg font-bold text-gray-900 mb-2">2.1.3 Understanding Folder Structure (Informational Only)</h3>
-            <p className="text-sm text-gray-600 mb-4">Please let us know how you would like the Worldox folder structure mapped in Docsvault. For example: Client - Matter - Documents. To review the current structure in Worldox, select the cabinet on the left and open its active folder view to see the folder levels and documents.</p>
+            <p className="text-sm text-gray-600 mb-6">Please let us know how you would like the Worldox folder structure mapped in Docsvault. For example: Client - Matter - Documents. To review the current structure in Worldox, select the cabinet on the left and open its active folder view to see the folder levels and documents.</p>
             
-            {/* 2.1.3 IMAGES with Fail-Safe Placeholders */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.1.3-folder-1.png" alt="Folder 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.3-folder-1.png</span>
-              </div>
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.1.3-folder-2.png" alt="Folder 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.1.3-folder-2.png</span>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <ImageCard src="/images/2.1.3-folder-1.png" label="Worldox" />
+              <ImageCard src="/images/2.1.3-folder-2.png" label="Docsvault" />
             </div>
           </div>
 
@@ -333,17 +349,13 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
           {/* 2.4 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-2">2.4 Comments</h3>
-            <p className="text-sm text-gray-600 mb-4">Where would you like Worldox comments to be stored in Docsvault?</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.4-comments-1.png" alt="Comments 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.4-comments-1.png</span>
-              </div>
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.4-comments-2.png" alt="Comments 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.4-comments-2.png</span>
-              </div>
+            <p className="text-sm text-gray-600 mb-6">Where would you like Worldox comments to be stored in Docsvault?</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <ImageCard src="/images/2.4-comments-1.png" label="Worldox" />
+              <ImageCard src="/images/2.4-comments-2.png" label="Docsvault" />
             </div>
+
             <div className="space-y-2">
               {[
                 { label: 'Description', desc: 'Comments appear in the single line Description column in document listing' },
@@ -361,17 +373,13 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
           {/* 2.5 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-2">2.5 Worldox DocID</h3>
-            <p className="text-sm text-gray-600 mb-4">Does your organization use Worldox Doc IDs to search for documents? If so, where should it be copied to in Docsvault?</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.5-docid-1.png" alt="DocID 1" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.5-docid-1.png</span>
-              </div>
-              <div className="relative min-h-[200px] bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center">
-                <img src="/images/2.5-docid-2.png" alt="DocID 2" className="w-full h-full object-contain p-2 rounded z-10 absolute inset-0" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-                <span className="text-gray-500 text-sm text-center px-4 z-0">Missing Image:<br/>2.5-docid-2.png</span>
-              </div>
+            <p className="text-sm text-gray-600 mb-6">Does your organization use Worldox Doc IDs to search for documents? If so, where should it be copied to in Docsvault?</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <ImageCard src="/images/2.5-docid-1.png" label="Worldox" />
+              <ImageCard src="/images/2.5-docid-2.png" label="Docsvault" />
             </div>
+
             <div className="space-y-2">
               {['Description field (If the field is used for Comments, it cannot also be used for the Doc ID.)', 'Document Notes (We recommend using this for DocID)', 'No need to migrate Doc IDs from Worldox'].map(opt => (
                 <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
@@ -453,6 +461,26 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
 
         </form>
       </div>
+
+      {/* LIGHTBOX MODAL FOR ZOOMING IMAGES */}
+      {zoomedImage && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out animate-in fade-in duration-200"
+          onClick={() => setZoomedImage(null)}
+        >
+          <img 
+            src={zoomedImage} 
+            alt="Zoomed Screenshot" 
+            className="max-w-[95vw] max-h-[95vh] object-contain rounded-lg shadow-2xl border-4 border-white/20" 
+          />
+          <button 
+            className="absolute top-6 right-6 text-white hover:text-gray-300 bg-black/50 hover:bg-black/80 rounded-full p-2 transition-colors"
+            onClick={() => setZoomedImage(null)}
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
