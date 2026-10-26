@@ -24,6 +24,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'PDF not found' }, { status: 404 });
   }
 
-  const [rows]: any = await db.query('SELECT token, status, updated_at FROM submissions ORDER BY updated_at DESC');
+  // Added internal_client_id to the SELECT query
+  const [rows]: any = await db.query('SELECT token, client_name, internal_client_id, status, updated_at FROM submissions ORDER BY updated_at DESC');
   return NextResponse.json(rows);
 }
