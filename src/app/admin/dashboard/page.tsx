@@ -4,23 +4,25 @@ import { useState, useEffect } from 'react';
 export default function AdminDashboard() {
   const [data, setData] = useState<any[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true); // Prevents the flicker
+  const [isLoading, setIsLoading] = useState(true);
+  const [authError, setAuthError] = useState(false);
+  
   const [clientName, setClientName] = useState('');
   const [internalClientId, setInternalClientId] = useState('');
 
   const fetchData = async () => {
     try {
       const res = await fetch('/api/admin/data');
-      if (res.ok) {
+      if (res.status === 401) {
+        setAuthError(true); // Show session expired screen
+      } else {
         const d = await res.json();
         setData(d);
-        setIsCheckingAuth(false);
-      } else {
-        // If unauthorized, redirect immediately without rendering the table
-        window.location.href = '/admin';
       }
     } catch (err) {
-      window.location.href = '/admin';
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -31,10 +33,10 @@ export default function AdminDashboard() {
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
+      window.location.href = '/admin';
     } catch (error) {
       console.error('Logout failed', error);
     }
-    window.location.href = '/admin';
   };
 
   const handleCreateLink = async () => {
@@ -71,11 +73,17 @@ export default function AdminDashboard() {
     }
   };
 
-  // Show a loading spinner while checking the cookie to prevent flickering
-  if (isCheckingAuth) {
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center bg-slate-50 text-brand-blue font-bold text-lg">Loading Admin Portal...</div>;
+  }
+
+  // If the cookie is missing, show this instead of crashing
+  if (authError) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="text-brand-blue font-medium animate-pulse">Verifying access...</div>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Session Expired</h1>
+        <p className="text-gray-500 mb-6">Please log in again to access the dashboard.</p>
+        <a href="/admin" className="bg-brand-blue text-white px-6 py-2 rounded-lg font-medium">Go to Login</a>
       </div>
     );
   }
