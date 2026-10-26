@@ -4,7 +4,9 @@ import { cookies } from 'next/headers';
 
 export async function GET(request: Request) {
   const cookieStore = await cookies();
-  if (cookieStore.get('admin_auth')?.value !== 'true') {
+  const authCookie = cookieStore.get('admin_auth');
+
+  if (authCookie?.value !== 'true') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -24,7 +26,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'PDF not found' }, { status: 404 });
   }
 
-  // Added internal_client_id to the SELECT query
   const [rows]: any = await db.query('SELECT token, client_name, internal_client_id, status, updated_at FROM submissions ORDER BY updated_at DESC');
   return NextResponse.json(rows);
 }
