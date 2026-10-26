@@ -22,7 +22,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
       { id: crypto.randomUUID(), name: '', indexes: [{ id: crypto.randomUUID(), name: 'Client', mapping: 'Code-Description' }, { id: crypto.randomUUID(), name: 'Matter', mapping: 'Code-Description' }], folderStructure: 'same', customFolderStructure: '' }
     ] as MappingCabinet[],
     authorFormat: 'Same format as in Worldox', authorOther: '',
-    commentsOption: 'Description', docIdOption: 'Document Notes',
+    commentsOption: 'Description', docIdOption: 'Document Notes (We recommend using this for DocID)',
     overwriteOption: 'Allow users to overwrite documents created by others',
     metadataOption: 'Administrators only', metadataUsers: '',
     stampingRequired: 'No', stampingRequirement: '',
@@ -71,7 +71,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
     try {
       const doc = new jsPDF();
       doc.setFontSize(20);
-      doc.setTextColor(126, 172, 247);
+      doc.setTextColor(126, 172, 247); // Brand Blue
       doc.text("Worldox to Docsvault Migration Form", 14, 20);
       
       doc.setFontSize(12);
@@ -111,7 +111,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
       doc.text(`2.8 Document Stamping: ${formData.stampingRequired} ${formData.stampingRequirement ? `- ${formData.stampingRequirement}` : ''}`, 14, yPos); yPos += 10;
       doc.text(`2.9 PDF Editing: ${formData.pdfEditor}`, 14, yPos); yPos += 15;
 
-      doc.setTextColor(236, 45, 56);
+      doc.setTextColor(236, 45, 56); // Brand Red
       doc.text(`Signed By: ${formData.signature}`, 14, yPos);
       doc.setTextColor(100,100,100);
       doc.setFontSize(10);
@@ -135,7 +135,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center text-brand-blue font-medium">Loading...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-[#7EACF7] font-medium">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-gray-900 pb-32">
@@ -146,7 +146,7 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             <h1 className="text-lg font-bold tracking-tight">Worldox to Docsvault Migration</h1>
           </div>
           {isSubmitted ? (
-             <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-brand-blue/20 text-brand-blue">Submitted</span>
+             <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-[#7EACF7]">Submitted</span>
           ) : (
             <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${saving ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>
               {saving ? 'Saving...' : 'All changes saved'}
@@ -158,29 +158,38 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
       <div className="max-w-4xl mx-auto px-4 pt-24 space-y-8">
         <form className={`space-y-8 ${isSubmitted ? 'opacity-60 pointer-events-none' : ''}`} onSubmit={handleSubmit}>
           
+          {/* SECTION 1 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 overflow-hidden">
-            <div className="bg-brand-blue px-6 py-4"><h2 className="text-lg font-semibold text-white">1. Information for the IT Team</h2></div>
-            <div className="p-6 space-y-4">
+            <div className="bg-[#7EACF7] px-6 py-4"><h2 className="text-lg font-semibold text-white">1. Information for the IT Team</h2></div>
+            <div className="p-6 space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">1.1 Access method / restrictions:</label>
+                <h3 className="font-semibold text-gray-800">1.1 Access to the Docsvault machine and Worldox</h3>
+                <p className="text-sm text-gray-600 mt-1 mb-3">How will the Docsvault team be given access to the Docsvault machine and Worldox for setup and migration? We recommend unattended access during migration so we can monitor progress and make changes when needed. We will follow your IT security policies and approved access process.</p>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Access method / any restrictions:</label>
                 <textarea className="w-full rounded-lg border-gray-300 shadow-sm p-3 border bg-gray-50" rows={3} value={formData.accessRestrictions} onChange={e => updateField('accessRestrictions', e.target.value)} placeholder="Describe access methods..." />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">1.2 SQL Server plan / notes:</label>
+                <h3 className="font-semibold text-gray-800">1.2 SQL Server</h3>
+                <p className="text-sm text-gray-600 mt-1 mb-3">Docsvault includes SQL Server Express. Depending on the repository size and number of users, you may have to provision a SQL Server Standard database. Roughly, you need a Standard SQL Server License if any of the following is true: 1. Your documents repository size will be &gt;500 GB 2. Users will be &gt;15 3. The number of documents to be saved is &gt;500K. <br/><em>Note: Close to these numbers? We can discuss the requirements on a case-by-case basis.</em></p>
+                <label className="block text-sm font-medium text-gray-700 mb-1">SQL Server plan / notes:</label>
                 <textarea className="w-full rounded-lg border-gray-300 shadow-sm p-3 border bg-gray-50" rows={2} value={formData.sqlServerNotes} onChange={e => updateField('sqlServerNotes', e.target.value)} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">1.3 Approx Size (GBs) / Number of Cabinets:</label>
+                <h3 className="font-semibold text-gray-800">1.3 Migration size</h3>
+                <label className="block text-sm font-medium text-gray-700 mt-2 mb-1">Please mention Approx Size (GBs) and Number of Cabinets/Files here:</label>
                 <input type="text" className="w-full rounded-lg border-gray-300 shadow-sm p-3 border bg-gray-50" value={formData.migrationSize} onChange={e => updateField('migrationSize', e.target.value)} />
               </div>
             </div>
           </div>
 
-          <div className="bg-brand-red px-6 py-4 rounded-2xl shadow-sm mt-12 mb-4"><h2 className="text-lg font-semibold text-white">2. Information from the Decision-Maker</h2></div>
+          {/* SECTION 2 HEADER */}
+          <div className="bg-[#EC2D38] px-6 py-4 rounded-2xl shadow-sm mt-12 mb-4"><h2 className="text-lg font-semibold text-white">2. Information from the Worldox Migration Decision-Maker</h2></div>
 
+          {/* 2.1.1 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-2">2.1.1 Cabinets to be migrated</h3>
-            <div className="overflow-x-auto border border-gray-200 rounded-lg mt-4">
+            <p className="text-sm text-gray-600 mb-6">Please list all Worldox cabinets that should be migrated to Docsvault. Please also let us know if there is a specific cutover date, as we can exclude any documents dated before that date from the migration to Docsvault.</p>
+            <div className="overflow-x-auto border border-gray-200 rounded-lg">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
@@ -198,30 +207,62 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                       <td className="px-2 py-2"><select className="w-full border-gray-300 rounded p-2 text-sm bg-white" value={cab.migrate} onChange={e => updateCabinetRow(cab.id, 'migrate', e.target.value)}><option>Yes</option><option>No</option></select></td>
                       <td className="px-2 py-2"><input type="date" className="w-full border-gray-300 rounded p-2 text-sm" value={cab.cutover} onChange={e => updateCabinetRow(cab.id, 'cutover', e.target.value)} /></td>
                       <td className="px-2 py-2"><input className="w-full border-gray-300 rounded p-2 text-sm" value={cab.users} onChange={e => updateCabinetRow(cab.id, 'users', e.target.value)} placeholder="Users" /></td>
-                      <td className="px-2 py-2 text-center"><button type="button" onClick={() => removeCabinetRow(cab.id)} className="text-brand-red font-bold">✕</button></td>
+                      <td className="px-2 py-2 text-center"><button type="button" onClick={() => removeCabinetRow(cab.id)} className="text-[#EC2D38] font-bold">✕</button></td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <button type="button" onClick={addCabinetRow} className="mt-4 text-sm font-medium text-brand-blue">+ Add Cabinet Row</button>
+            <button type="button" onClick={addCabinetRow} className="mt-4 text-sm font-medium text-[#7EACF7]">+ Add Cabinet Row</button>
           </div>
 
+          {/* 2.1.2 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-6">2.2 Individual Index mapping and folder structure</h3>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">2.1.2 Understanding Index and metadata mapping (Informational Only)</h3>
+            <p className="text-sm text-gray-600 mb-4">Worldox stores an index value as two fields: Code(ID) and Description. Docsvault uses one field, so please choose how each index should appear after migration.</p>
+            <table className="max-w-md w-full border border-gray-300 text-sm text-left mb-4">
+              <thead className="bg-gray-100"><tr><th className="p-2 border-b">Mapping option</th><th className="p-2 border-b">Example Client Value</th></tr></thead>
+              <tbody>
+                <tr className="bg-white"><td className="p-2 border-b">Code - Description</td><td className="p-2 border-b">001 - Acme Corp</td></tr>
+                <tr className="bg-white"><td className="p-2 border-b">Code only</td><td className="p-2 border-b">001</td></tr>
+                <tr className="bg-white"><td className="p-2 border-b">Description only</td><td className="p-2 border-b">Acme Corp</td></tr>
+              </tbody>
+            </table>
+            <p className="text-sm text-gray-600">For example, if Client Code = 001 and Client Description = Acme Corp, choose the format you prefer. Apply the same decision to indexes such as Client, Matter, DocType, Author, Creator, and any other indexes used in each cabinet.</p>
+          </div>
+
+          {/* 2.1.3 */}
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">2.1.3 Understanding Folder Structure (Informational Only)</h3>
+            <p className="text-sm text-gray-600 mb-4">Please let us know how you would like the Worldox folder structure mapped in Docsvault. For example: Client - Matter - Documents. To review the current structure in Worldox, select the cabinet on the left and open its active folder view to see the folder levels and documents.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.1.3-folder-1.png" alt="Folder Structure 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.3-folder-1.png</span>
+              </div>
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.1.3-folder-2.png" alt="Folder Structure 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.1.3-folder-2.png</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 2.2 */}
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-6">2.2 Individual Index mapping and folder structure decision for all cabinets</h3>
             <div className="space-y-8">
               {formData.mappingCabinets.map((cabinet, idx) => (
                 <div key={cabinet.id} className="border border-gray-300 rounded-xl overflow-hidden">
                   <div className="bg-gray-50 px-4 py-3 border-b flex justify-between items-center">
-                    <h4 className="font-bold text-gray-800">Cabinet {idx + 1}</h4>
-                    <button type="button" onClick={() => removeMappingCabinet(cabinet.id)} className="text-sm text-brand-red">Remove</button>
+                    <h4 className="font-bold text-gray-800">2.2.{idx + 1} Cabinet {idx + 1} Name</h4>
+                    <button type="button" onClick={() => removeMappingCabinet(cabinet.id)} className="text-sm text-[#EC2D38]">Remove</button>
                   </div>
                   <div className="p-4 space-y-6">
                     <input className="w-full rounded-lg border-gray-300 p-3 border bg-gray-50" placeholder="Enter Cabinet Name" value={cabinet.name} onChange={(e) => updateMappingCabinet(cabinet.id, 'name', e.target.value)} />
                     <div>
                       <div className="flex justify-between items-end mb-2">
                         <label className="text-sm font-semibold text-gray-700">Index Mapping</label>
-                        <button type="button" onClick={() => addIndex(cabinet.id)} className="text-sm text-brand-blue">+ Add Index</button>
+                        <button type="button" onClick={() => addIndex(cabinet.id)} className="text-sm text-[#7EACF7]">+ Add Index</button>
                       </div>
                       <table className="w-full border border-gray-200 text-sm">
                         <thead className="bg-gray-50">
@@ -236,17 +277,17 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                                   <option>Code-Description</option><option>Code</option><option>Description</option>
                                 </select>
                               </td>
-                              <td className="p-2 border-b text-center"><button type="button" onClick={() => removeIndex(cabinet.id, index.id)} className="text-brand-red font-bold">✕</button></td>
+                              <td className="p-2 border-b text-center"><button type="button" onClick={() => removeIndex(cabinet.id, index.id)} className="text-[#EC2D38] font-bold">✕</button></td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
                     <div className="bg-gray-50 p-4 rounded-lg">
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Folder Structure:</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">For Folder Structure:</label>
                       <div className="flex gap-4 mb-2">
                         <label className="flex items-center gap-2 text-sm"><input type="radio" name={`fs-${cabinet.id}`} checked={cabinet.folderStructure === 'same'} onChange={() => updateMappingCabinet(cabinet.id, 'folderStructure', 'same')} /> Keep same as Worldox</label>
-                        <label className="flex items-center gap-2 text-sm"><input type="radio" name={`fs-${cabinet.id}`} checked={cabinet.folderStructure === 'change'} onChange={() => updateMappingCabinet(cabinet.id, 'folderStructure', 'change')} /> Change to:</label>
+                        <label className="flex items-center gap-2 text-sm"><input type="radio" name={`fs-${cabinet.id}`} checked={cabinet.folderStructure === 'change'} onChange={() => updateMappingCabinet(cabinet.id, 'folderStructure', 'change')} /> Change to following:</label>
                       </div>
                       {cabinet.folderStructure === 'change' && (
                         <input className="w-full rounded-lg border-gray-300 p-2 border text-sm" placeholder="Client >> Matter >> Documents" value={cabinet.customFolderStructure} onChange={(e) => updateMappingCabinet(cabinet.id, 'customFolderStructure', e.target.value)} />
@@ -256,30 +297,44 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                 </div>
               ))}
             </div>
-            <button type="button" onClick={addMappingCabinet} className="mt-6 w-full py-2 border-2 border-dashed border-brand-blue text-brand-blue rounded-xl font-medium">+ Add Another Cabinet Mapping</button>
+            <button type="button" onClick={addMappingCabinet} className="mt-6 w-full py-2 border-2 border-dashed border-[#7EACF7] text-[#7EACF7] rounded-xl font-medium">+ Add Another Cabinet Mapping</button>
           </div>
 
+          {/* 2.3 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">2.3 Author / Typist</h3>
+            <p className="text-sm text-gray-600 mb-4">For Author / Typist fields, what should Docsvault use:</p>
             <div className="space-y-2">
-              {['Same format as in Worldox', 'Users\' Full Name', 'Some other format'].map(opt => (
+              {['Same format as in Worldox', 'Users\' Full Name', 'Some other format [ ]'].map(opt => (
                 <label key={opt} className="flex items-center gap-2 text-sm">
                   <input type="radio" name="authorFormat" checked={formData.authorFormat === opt} onChange={() => updateField('authorFormat', opt)} /> {opt}
                 </label>
               ))}
-              {formData.authorFormat === 'Some other format' && (
+              {formData.authorFormat === 'Some other format [ ]' && (
                 <input className="mt-2 w-full max-w-md rounded-lg border-gray-300 p-2 border bg-gray-50 text-sm" placeholder="Specify format" value={formData.authorOther} onChange={e => updateField('authorOther', e.target.value)} />
               )}
             </div>
           </div>
 
+          {/* 2.4 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">2.4 Comments</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">2.4 Comments</h3>
+            <p className="text-sm text-gray-600 mb-4">Where would you like Worldox comments to be stored in Docsvault?</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.4-comments-1.png" alt="Comments 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.4-comments-1.png</span>
+              </div>
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.4-comments-2.png" alt="Comments 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.4-comments-2.png</span>
+              </div>
+            </div>
             <div className="space-y-2">
               {[
-                { label: 'Description', desc: 'Comments appear in the single line Description column' },
-                { label: 'Document Notes', desc: 'Comments are stored in multi line Document Notes' },
-                { label: 'Version Notes', desc: 'Appears in version notes' }
+                { label: 'Description', desc: 'Comments appear in the single line Description column in document listing' },
+                { label: 'Document Notes', desc: 'Comments are stored in multi line Document Notes in right panel' },
+                { label: 'Version Notes', desc: 'Appears in version notes (useful when versions in WD have different comments)' }
               ].map(opt => (
                 <label key={opt.label} className="flex items-start gap-2 text-sm p-2 border rounded hover:bg-gray-50">
                   <input type="radio" name="commentsOption" className="mt-1" checked={formData.commentsOption === opt.label} onChange={() => updateField('commentsOption', opt.label)} />
@@ -289,10 +344,22 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </div>
           </div>
 
+          {/* 2.5 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
-            <h3 className="text-xl font-bold text-gray-900 mb-4">2.5 Worldox DocID</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">2.5 Worldox DocID</h3>
+            <p className="text-sm text-gray-600 mb-4">Does your organization use Worldox Doc IDs to search for documents? If so, where should it be copied to in Docsvault?</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.5-docid-1.png" alt="DocID 1" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.5-docid-1.png</span>
+              </div>
+              <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center p-4 min-h-[200px] relative overflow-hidden">
+                <img src="/images/2.5-docid-2.png" alt="DocID 2" className="w-full h-auto rounded shadow-sm z-10" onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling?.classList.remove('hidden'); }} />
+                <span className="text-gray-400 text-sm absolute hidden text-center px-4">Placeholder:<br/>public/images/2.5-docid-2.png</span>
+              </div>
+            </div>
             <div className="space-y-2">
-              {['Description field', 'Document Notes (Recommended)', 'No need to migrate Doc IDs'].map(opt => (
+              {['Description field (If the field is used for Comments, it cannot also be used for the Doc ID.)', 'Document Notes (We recommend using this for DocID)', 'No need to migrate Doc IDs from Worldox'].map(opt => (
                 <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
                   <input type="radio" name="docIdOption" checked={formData.docIdOption === opt} onChange={() => updateField('docIdOption', opt)} /> {opt}
                 </label>
@@ -300,10 +367,12 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </div>
           </div>
 
+          {/* 2.6 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">2.6 Document Overwrite Permissions</h3>
+            <p className="text-sm text-gray-600 mb-4">For cabinets where users have access:</p>
             <div className="space-y-2">
-              {['Allow users to overwrite documents created by others', 'Force users to create a new version'].map(opt => (
+              {['Allow users to overwrite documents created by others', 'Force users to create a new version if they do not own the document'].map(opt => (
                 <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
                   <input type="radio" name="overwriteOption" checked={formData.overwriteOption === opt} onChange={() => updateField('overwriteOption', opt)} /> {opt}
                 </label>
@@ -311,8 +380,10 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </div>
           </div>
 
+          {/* 2.7 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">2.7 Creating new metadata values</h3>
+            <p className="text-sm text-gray-600 mb-4">Who should be allowed to add new values, such as a new Client, Matter, DocType, etc.?</p>
             <div className="space-y-2">
               {['All users', 'Administrators only', 'Selected users / groups'].map(opt => (
                 <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
@@ -320,13 +391,15 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
                 </label>
               ))}
               {formData.metadataOption === 'Selected users / groups' && (
-                <input className="mt-2 w-full max-w-md rounded-lg border-gray-300 p-2 border bg-gray-50 text-sm" placeholder="Name of Users/Groups" value={formData.metadataUsers} onChange={e => updateField('metadataUsers', e.target.value)} />
+                <input className="mt-2 w-full max-w-md rounded-lg border-gray-300 p-2 border bg-gray-50 text-sm" placeholder="Mention the name of Users/Groups" value={formData.metadataUsers} onChange={e => updateField('metadataUsers', e.target.value)} />
               )}
             </div>
           </div>
 
+          {/* 2.8 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">2.8 Document stamping</h3>
+            <p className="text-sm text-gray-600 mb-4">Is document stamping in MS Word required? If yes, what information should appear? Example: DocID or DocID.Version</p>
             <div className="space-y-2">
               {['Yes', 'No'].map(opt => (
                 <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
@@ -339,8 +412,10 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </div>
           </div>
 
+          {/* 2.9 */}
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
             <h3 className="text-xl font-bold text-gray-900 mb-4">2.9 PDF Editing</h3>
+            <p className="text-sm text-gray-600 mb-4">Would users prefer to use their own PDF editor or Docsvault's built-in PDF editor?</p>
             <div className="space-y-2">
               {['Docsvault\'s Built in PDF Editor', 'Your current PDF Editor'].map(opt => (
                 <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
@@ -350,16 +425,18 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
             </div>
           </div>
 
-          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8 border-t-4 border-t-brand-red">
+          {/* SIGNATURE */}
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8 border-t-4 border-t-[#EC2D38]">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Sign & Submit</h3>
-            <p className="text-sm text-gray-600 mb-4">Type your full name to electronically sign. Once submitted, you cannot edit this form.</p>
+            <p className="text-sm text-gray-600 mb-4">Please type your full name below to electronically sign and submit this document. Once submitted, a PDF will be downloaded and you will not be able to edit this form.</p>
             <input type="text" className="w-full border p-3 rounded-lg bg-gray-50 font-medium" value={formData.signature} onChange={(e) => updateField('signature', e.target.value)} placeholder="Full Name" />
             <div className="mt-6 flex justify-end">
-              <button type="submit" disabled={!formData.signature || isSubmitted || submitting} className="px-10 py-3 rounded-full text-white bg-brand-blue hover:bg-brand-blue/90 font-medium disabled:bg-gray-400">
+              <button type="submit" disabled={!formData.signature || isSubmitted || submitting} className="px-10 py-3 rounded-full text-white bg-[#7EACF7] hover:bg-[#7EACF7]/90 font-medium disabled:bg-gray-400">
                 {submitting ? 'Generating PDF...' : isSubmitted ? 'Submitted' : 'Sign & Submit Form'}
               </button>
             </div>
           </div>
+
         </form>
       </div>
     </div>
