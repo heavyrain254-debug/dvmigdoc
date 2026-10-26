@@ -1,0 +1,27 @@
+{
+  "name": "docsvault-app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.8.2",
+    "mysql2": "^3.9.7",
+    "next": "^16.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@tailwindcss/postcss": "^4.0.0",
+    "postcss": "^8",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5"
+  }
+}
