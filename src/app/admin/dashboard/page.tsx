@@ -4,28 +4,38 @@ import { useState, useEffect } from 'react';
 export default function AdminDashboard() {
   const [data, setData] = useState<any[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true); // Prevents the flicker
   const [clientName, setClientName] = useState('');
   const [internalClientId, setInternalClientId] = useState('');
 
-  const fetchData = () => {
-    fetch('/api/admin/data').then(res => res.json()).then(d => setData(d));
+  const fetchData = async () => {
+    try {
+      const res = await fetch('/api/admin/data');
+      if (res.ok) {
+        const d = await res.json();
+        setData(d);
+        setIsCheckingAuth(false);
+      } else {
+        // If unauthorized, redirect immediately without rendering the table
+        window.location.href = '/admin';
+      }
+    } catch (err) {
+      window.location.href = '/admin';
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  // --- THIS IS THE LOGOUT FUNCTION ---
   const handleLogout = async () => {
     try {
       await fetch('/api/admin/logout', { method: 'POST' });
     } catch (error) {
       console.error('Logout failed', error);
     }
-    // Force a hard refresh to clear all React state and cookies
     window.location.href = '/admin';
   };
-  // -----------------------------------
 
   const handleCreateLink = async () => {
     if (!clientName || !internalClientId) {
@@ -61,26 +71,28 @@ export default function AdminDashboard() {
     }
   };
 
+  // Show a loading spinner while checking the cookie to prevent flickering
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-brand-blue font-medium animate-pulse">Verifying access...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
-      {/* Top Navigation */}
       <nav className="bg-white border-b border-gray-200 px-8 py-4 flex justify-between items-center sticky top-0 z-10 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 bg-brand-blue rounded-lg flex items-center justify-center text-white font-bold text-xl">D</div>
           <h1 className="text-xl font-bold text-gray-900">Admin Portal</h1>
         </div>
-        {/* THIS IS THE BUTTON THAT CALLS THE FUNCTION */}
-        <button 
-          onClick={handleLogout} 
-          className="text-sm font-medium text-gray-500 hover:text-brand-red transition-colors"
-        >
+        <button onClick={handleLogout} className="text-sm font-medium text-gray-500 hover:text-brand-red transition-colors">
           Log Out
         </button>
       </nav>
 
       <div className="p-8 max-w-7xl mx-auto space-y-8">
-        
-        {/* Link Generator Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="bg-brand-blue px-6 py-4">
             <h2 className="text-white font-semibold">Generate New Client Link</h2>
@@ -88,35 +100,18 @@ export default function AdminDashboard() {
           <div className="p-6 flex flex-col md:flex-row items-end gap-4">
             <div className="flex-1 w-full">
               <label className="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
-              <input 
-                type="text" 
-                placeholder="e.g., Acme Corp" 
-                className="w-full border border-gray-300 rounded-lg p-3 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all" 
-                value={clientName} 
-                onChange={e => setClientName(e.target.value)} 
-              />
+              <input type="text" placeholder="e.g., Acme Corp" className="w-full border border-gray-300 rounded-lg p-3 outline-none" value={clientName} onChange={e => setClientName(e.target.value)} />
             </div>
             <div className="flex-1 w-full">
               <label className="block text-sm font-medium text-gray-700 mb-1">Internal Client ID</label>
-              <input 
-                type="text" 
-                placeholder="e.g., 10045" 
-                className="w-full border border-gray-300 rounded-lg p-3 focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 outline-none transition-all" 
-                value={internalClientId} 
-                onChange={e => setInternalClientId(e.target.value)} 
-              />
+              <input type="text" placeholder="e.g., 10045" className="w-full border border-gray-300 rounded-lg p-3 outline-none" value={internalClientId} onChange={e => setInternalClientId(e.target.value)} />
             </div>
-            <button 
-              onClick={handleCreateLink} 
-              disabled={isGenerating}
-              className="bg-brand-blue text-white px-8 py-3 rounded-lg font-medium hover:bg-brand-blue/90 disabled:bg-gray-400 transition-all shadow-sm whitespace-nowrap"
-            >
+            <button onClick={handleCreateLink} disabled={isGenerating} className="bg-brand-blue text-white px-8 py-3 rounded-lg font-medium hover:bg-brand-blue/90 disabled:bg-gray-400 shadow-sm whitespace-nowrap">
               {isGenerating ? 'Generating...' : 'Create Link'}
             </button>
           </div>
         </div>
 
-        {/* Data Table */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="px-6 py-5 border-b border-gray-200">
             <h2 className="text-lg font-bold text-gray-900">Recent Submissions</h2>
@@ -148,7 +143,6 @@ export default function AdminDashboard() {
                     <td className="px-6 py-4 text-right">
                       {row.status === 'SUBMITTED' ? (
                         <a href={`/api/admin/data?download=${row.token}`} className="inline-flex items-center gap-1 text-brand-blue font-semibold hover:text-brand-blue/80">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                           Download PDF
                         </a>
                       ) : (
@@ -168,7 +162,6 @@ export default function AdminDashboard() {
             </table>
           </div>
         </div>
-
       </div>
     </div>
   );
