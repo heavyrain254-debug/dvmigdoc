@@ -103,6 +103,14 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
         doc.text(`Folder Structure: ${cab.folderStructure === 'same' ? 'Same as Worldox' : cab.customFolderStructure}`, 14, yPos); yPos += 15;
       });
 
+      doc.text(`2.3 Author/Typist: ${formData.authorFormat} ${formData.authorOther ? `(${formData.authorOther})` : ''}`, 14, yPos); yPos += 10;
+      doc.text(`2.4 Comments: ${formData.commentsOption}`, 14, yPos); yPos += 10;
+      doc.text(`2.5 DocID: ${formData.docIdOption}`, 14, yPos); yPos += 10;
+      doc.text(`2.6 Overwrite Permissions: ${formData.overwriteOption}`, 14, yPos); yPos += 10;
+      doc.text(`2.7 Metadata Values: ${formData.metadataOption} ${formData.metadataUsers ? `(${formData.metadataUsers})` : ''}`, 14, yPos); yPos += 10;
+      doc.text(`2.8 Document Stamping: ${formData.stampingRequired} ${formData.stampingRequirement ? `- ${formData.stampingRequirement}` : ''}`, 14, yPos); yPos += 10;
+      doc.text(`2.9 PDF Editing: ${formData.pdfEditor}`, 14, yPos); yPos += 15;
+
       doc.setTextColor(236, 45, 56);
       doc.text(`Signed By: ${formData.signature}`, 14, yPos);
       doc.setTextColor(100,100,100);
@@ -249,6 +257,97 @@ export default function Form({ params }: { params: Promise<{ token: string }> })
               ))}
             </div>
             <button type="button" onClick={addMappingCabinet} className="mt-6 w-full py-2 border-2 border-dashed border-brand-blue text-brand-blue rounded-xl font-medium">+ Add Another Cabinet Mapping</button>
+          </div>
+
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">2.3 Author / Typist</h3>
+            <div className="space-y-2">
+              {['Same format as in Worldox', 'Users\' Full Name', 'Some other format'].map(opt => (
+                <label key={opt} className="flex items-center gap-2 text-sm">
+                  <input type="radio" name="authorFormat" checked={formData.authorFormat === opt} onChange={() => updateField('authorFormat', opt)} /> {opt}
+                </label>
+              ))}
+              {formData.authorFormat === 'Some other format' && (
+                <input className="mt-2 w-full max-w-md rounded-lg border-gray-300 p-2 border bg-gray-50 text-sm" placeholder="Specify format" value={formData.authorOther} onChange={e => updateField('authorOther', e.target.value)} />
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">2.4 Comments</h3>
+            <div className="space-y-2">
+              {[
+                { label: 'Description', desc: 'Comments appear in the single line Description column' },
+                { label: 'Document Notes', desc: 'Comments are stored in multi line Document Notes' },
+                { label: 'Version Notes', desc: 'Appears in version notes' }
+              ].map(opt => (
+                <label key={opt.label} className="flex items-start gap-2 text-sm p-2 border rounded hover:bg-gray-50">
+                  <input type="radio" name="commentsOption" className="mt-1" checked={formData.commentsOption === opt.label} onChange={() => updateField('commentsOption', opt.label)} />
+                  <div><span className="font-semibold">{opt.label}</span><br/><span className="text-gray-500">{opt.desc}</span></div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">2.5 Worldox DocID</h3>
+            <div className="space-y-2">
+              {['Description field', 'Document Notes (Recommended)', 'No need to migrate Doc IDs'].map(opt => (
+                <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
+                  <input type="radio" name="docIdOption" checked={formData.docIdOption === opt} onChange={() => updateField('docIdOption', opt)} /> {opt}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">2.6 Document Overwrite Permissions</h3>
+            <div className="space-y-2">
+              {['Allow users to overwrite documents created by others', 'Force users to create a new version'].map(opt => (
+                <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
+                  <input type="radio" name="overwriteOption" checked={formData.overwriteOption === opt} onChange={() => updateField('overwriteOption', opt)} /> {opt}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">2.7 Creating new metadata values</h3>
+            <div className="space-y-2">
+              {['All users', 'Administrators only', 'Selected users / groups'].map(opt => (
+                <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
+                  <input type="radio" name="metadataOption" checked={formData.metadataOption === opt} onChange={() => updateField('metadataOption', opt)} /> {opt}
+                </label>
+              ))}
+              {formData.metadataOption === 'Selected users / groups' && (
+                <input className="mt-2 w-full max-w-md rounded-lg border-gray-300 p-2 border bg-gray-50 text-sm" placeholder="Name of Users/Groups" value={formData.metadataUsers} onChange={e => updateField('metadataUsers', e.target.value)} />
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">2.8 Document stamping</h3>
+            <div className="space-y-2">
+              {['Yes', 'No'].map(opt => (
+                <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
+                  <input type="radio" name="stampingRequired" checked={formData.stampingRequired === opt} onChange={() => updateField('stampingRequired', opt)} /> {opt}
+                </label>
+              ))}
+              {formData.stampingRequired === 'Yes' && (
+                <input className="mt-2 w-full max-w-md rounded-lg border-gray-300 p-2 border bg-gray-50 text-sm" placeholder="Mention Stamping requirement here" value={formData.stampingRequirement} onChange={e => updateField('stampingRequirement', e.target.value)} />
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">2.9 PDF Editing</h3>
+            <div className="space-y-2">
+              {['Docsvault\'s Built in PDF Editor', 'Your current PDF Editor'].map(opt => (
+                <label key={opt} className="flex items-center gap-2 text-sm p-2 border rounded hover:bg-gray-50">
+                  <input type="radio" name="pdfEditor" checked={formData.pdfEditor === opt} onChange={() => updateField('pdfEditor', opt)} /> {opt}
+                </label>
+              ))}
+            </div>
           </div>
 
           <div className="bg-white shadow-sm rounded-2xl border border-gray-200 p-6 sm:p-8 border-t-4 border-t-brand-red">
